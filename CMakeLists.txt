@@ -39,7 +39,10 @@ set(BUILD_HACD OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(bullet)
 
-# Subdirectorios
+# Add this line before any add_subdirectory or target definitions
+add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE)
+
+# Subdirectories
 add_subdirectory(lib)
 add_subdirectory(examples/helloworld)
 add_subdirectory(examples/example2)

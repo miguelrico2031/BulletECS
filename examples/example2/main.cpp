@@ -4,5 +4,4 @@
 void main()
 {
 	std::cout << "EXAMPLE 2\n";
-	BulletECS::Test();
 }

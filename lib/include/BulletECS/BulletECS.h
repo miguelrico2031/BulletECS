@@ -1,6 +1,2 @@
 #pragma once
-
-namespace BulletECS
-{
-	void Test();
-}
+#include "BulletECS/PhysicsWorld.h"

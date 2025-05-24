@@ -119,4 +119,14 @@ namespace BulletECS
 		}
 		return it->second.get();
 	}
+
+	const btCollisionShape* CollisionShapeContainer::get(Entity entity) const
+	{
+		auto it = m_entitiesWithShape.find(entity.ID);
+		if (it == m_entitiesWithShape.end())
+		{
+			return nullptr;
+		}
+		return it->second.get();
+	}
 }

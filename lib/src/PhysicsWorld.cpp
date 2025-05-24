@@ -62,7 +62,7 @@ namespace BulletECS
 
 	btDefaultMotionState* PhysicsWorld::addMotionState(Entity entity, const btTransform& transformData)
 	{
-		return  m_motionStatePool.add(entity, transformData);
+		return m_motionStatePool.add(entity, transformData);
 	}
 
 	btBoxShape* PhysicsWorld::setBoxCollider(Entity entity, btVector3 halfExtents)
@@ -90,7 +90,12 @@ namespace BulletECS
 		return m_collisionShapeContainer.setFromExistentEntity(entity, existentEntityWithCollider);
 	}
 
-	btRigidBody* PhysicsWorld::addRigidBody(Entity entity, float mass)
+	void PhysicsWorld::addTag(Entity entity, const std::string& name)
+	{
+		m_tagPool.add(entity, name);
+	}
+
+	btRigidBody* PhysicsWorld::addRigidBody(Entity entity, float mass, float restitution)
 	{
 		//TODO: make sure the entity has a motionState and collider
 		btDefaultMotionState* motionState = getMotionState(entity);
@@ -106,6 +111,7 @@ namespace BulletECS
 		}
 
 		btRigidBody::btRigidBodyConstructionInfo rbData(mass, motionState, collider, localInertia);
+		rbData.m_restitution = restitution;
 
 		btRigidBody* rigidBody = m_rigidBodyPool.add(entity, rbData);
 
@@ -136,15 +142,38 @@ namespace BulletECS
 		m_rigidBodyPool.remove(entity);
 	}
 
+	void PhysicsWorld::removeTag(Entity entity)
+	{
+		m_tagPool.remove(entity);
+	}
+
 	void PhysicsWorld::destroyEntity(Entity entity)
 	{
-		removeRigidBody(entity);
-		removeCollider(entity);
-		removeMotionState(entity);
+		if (m_rigidBodyPool.has(entity))
+		{
+			removeRigidBody(entity);
+		}
+		if (m_collisionShapeContainer.has(entity))
+		{
+			removeCollider(entity);
+		}
+		if (m_motionStatePool.has(entity))
+		{
+			removeMotionState(entity);
+		}
+		if (m_tagPool.has(entity))
+		{
+			removeTag(entity);
+		}
 		m_entityManager.destroyEntity(entity);
 	}
 
 	btDefaultMotionState* PhysicsWorld::getMotionState(Entity entity)
+	{
+		return m_motionStatePool.get(entity);
+	}
+
+	const btDefaultMotionState* PhysicsWorld::getMotionState(const Entity entity) const
 	{
 		return m_motionStatePool.get(entity);
 	}
@@ -154,9 +183,28 @@ namespace BulletECS
 		return m_collisionShapeContainer.get(entity);
 	}
 
+	const btCollisionShape* PhysicsWorld::getCollisionShape(const Entity entity) const
+	{
+		return m_collisionShapeContainer.get(entity);
+	}
+
 	btRigidBody* PhysicsWorld::getRigidBody(Entity entity)
 	{
 		return m_rigidBodyPool.get(entity);
+	}
+
+	const btRigidBody* PhysicsWorld::getRigidBody(const Entity entity) const
+	{
+		return m_rigidBodyPool.get(entity);
+	}
+
+	const std::string& PhysicsWorld::getTag(Entity entity) const
+	{
+		if (auto* tag = m_tagPool.get(entity))
+		{
+			return tag->name;
+		}
+		return NO_TAG;
 	}
 
 

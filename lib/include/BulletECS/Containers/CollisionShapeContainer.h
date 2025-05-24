@@ -6,15 +6,6 @@
 #include <btBulletDynamicsCommon.h>
 namespace BulletECS
 {
-	//enum class ColliderType
-	//{
-	//	None, Box, Sphere, Cylinder, Capsule
-	//};
-	//struct TypedCollisionShapeRef
-	//{
-	//	ColliderType type = ColliderType::None;
-	//	std::shared_ptr<btCollisionShape> ptr = nullptr;
-	//};
 
 	class CollisionShapeContainer
 	{
@@ -30,6 +21,8 @@ namespace BulletECS
 		inline bool has(Entity entity) const { return m_entitiesWithShape.find(entity.ID) != m_entitiesWithShape.end(); }
 
 		btCollisionShape* get(Entity entity);
+		const btCollisionShape* get(Entity entity) const;
+		
 
 	private:
 		std::unordered_map <std::string, std::shared_ptr<btCollisionShape>> m_uniqueCollisionShapes;

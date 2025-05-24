@@ -44,5 +44,6 @@ add_definitions(-D_ENABLE_EXTENDED_ALIGNED_STORAGE)
 
 # Subdirectories
 add_subdirectory(lib)
-add_subdirectory(examples/helloworld)
-add_subdirectory(examples/example2)
+add_subdirectory(examples/HelloWorld)
+add_subdirectory(examples/ECSDemo)
+add_subdirectory(examples/DemoVsRawBullet)
